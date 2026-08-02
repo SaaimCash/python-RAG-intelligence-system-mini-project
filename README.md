@@ -1,6 +1,6 @@
-# 🧠 AI RAG Lab
+# 🧠 AI RAG pipeline
 
-A local **Retrieval-Augmented Generation (RAG)** pipeline built with LangChain, ChromaDB, and LiteLLM.
+A mini project demo to learn how to build a local **Retrieval-Augmented Generation (RAG)** pipeline with LangChain, ChromaDB, and LiteLLM.
 
 Ask questions about your documents — the AI answers using **only** what's in your knowledge base, and refuses to hallucinate.
 
