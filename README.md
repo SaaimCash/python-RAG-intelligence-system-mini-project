@@ -41,7 +41,6 @@ GROQ_API_KEY=your_key_here
 GEMINI_API_KEY=your_key_here
 OPENAI_API_KEY=your_key_here
 ```
-> Get a free Groq key at: https://console.groq.com
 
 ### 4. Build the vector database
 ```bash
