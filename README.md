@@ -24,8 +24,8 @@ ai_rag_lab/
 
 ### 1. Clone the repo
 ```bash
-git clone https://github.com/YOUR_USERNAME/ai_rag_lab.git
-cd ai_rag_lab
+git clone https://github.com/YOUR_USERNAME/python-rag-intelligence-system-mini-project.git
+cd python-rag-intelligence-system-mini-project
 ```
 
 ### 2. Install dependencies
