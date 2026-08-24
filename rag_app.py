@@ -89,11 +89,7 @@ def ask_rag(user_question: str):
 
 # RUNS RAG PIPELINE TESTS
 
-# Test 1: Question where context EXISTS in our database
-ask_rag("What is the timeline for getting my money back?")
-
-# Test 2: Question where context DOES NOT exist (Testing hallucination guardrails)
-ask_rag("What is the cost of the Enterprise plan?")
-
-# Test 3: Question about a different existing feature (Testing breadth of retrieval)
-ask_rag("What login methods are supported?")
+# RUNS RAG PIPELINE TESTS (Targeting sample.pdf content)
+ask_rag("What is the main subject of this document?")
+ask_rag("Can you summarize the core conclusions of the paper?")
+ask_rag("What is Srisawad Corporation Public Company Limited (SAWAD)")
