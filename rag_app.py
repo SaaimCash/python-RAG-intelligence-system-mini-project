@@ -22,7 +22,7 @@ load_dotenv()
 #   "gemini/gemini-2.0-flash"               -> needs GEMINI_API_KEY
 #   "mistral/mistral-large-latest"          -> needs MISTRAL_API_KEY
 # ---------------------------------------------------------
-MODEL = "ollama/llama3.2"
+MODEL = "groq/llama3-8b-8192"
 
 
 
@@ -74,14 +74,14 @@ def ask_rag(user_question: str):
     print(context_text)
     
     # Fills prompt template with retrieved context + user question
-    formatted_prompt = prompt_template.format(
-        context=context_text, 
+    formatted_messages = prompt_template.format_prompt(
+        context=context_text,
         question=user_question
-    )
-    
-    # Passes formatted prompt into LLM via the standard .invoke() interface
+    ).to_messages()
+
+    # Passes formatted messages into LLM via the standard .invoke() interface
     print(f"\n[2. GENERATING ANSWER VIA {MODEL.upper()}...]")
-    response = llm.invoke(formatted_prompt)
+    response = llm.invoke(formatted_messages)
     
     print("\n[3. FINAL GROUNDED AI ANSWER]")
     print(response.content)

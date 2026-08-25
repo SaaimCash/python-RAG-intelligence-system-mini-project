@@ -6,16 +6,18 @@ from langchain_chroma import Chroma
 
 
 def process_and_store_document(file_path: str):
-
     """
     Loads a PDF or TXT file, splits it into overlapping chunks,
     generates embeddings, and persists them into ChromaDB.
+
+    Re-running this on the same file_path replaces that file's old
+    chunks instead of duplicating them, so ingestion is idempotent.
     """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
 
     print(f"\n1. Loading document from: {file_path}")
-    
+
     # Select loader based on file extension
     if file_path.endswith(".pdf"):
         loader = PyPDFLoader(file_path)
@@ -37,24 +39,34 @@ def process_and_store_document(file_path: str):
     chunks = text_splitter.split_documents(raw_documents)
     print(f"2. Created {len(chunks)} text chunks.")
 
-
-    print("3. Loading embedding model & updating ChromaDB...")
+    print("3. Loading embedding model & connecting to ChromaDB...")
     embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
-    vectorstore = Chroma.from_documents(
-        documents=chunks,
-        embedding=embedding_model,
-        persist_directory="./chroma_db"
+    vectorstore = Chroma(
+        persist_directory="./chroma_db",
+        embedding_function=embedding_model
     )
-    
+
+    # DE-DUP GUARD
+    # PyPDFLoader/TextLoader stamp each chunk's metadata with "source" =
+    # the file_path passed in. Before adding new chunks, remove any
+    # chunks already in the store from this same source so re-running
+    # ingestion on the same file doesn't pile up duplicates over time.
+    existing = vectorstore.get(where={"source": file_path})
+    if existing["ids"]:
+        print(f"   Found {len(existing['ids'])} existing chunk(s) from this file — replacing them.")
+        vectorstore.delete(ids=existing["ids"])
+
+    vectorstore.add_documents(chunks)
+
     print("Success! Document processed and saved into ChromaDB.\n")
     return vectorstore
 
 
 if __name__ == "__main__":
     # Sample test
-    sample_file = "sample.pdf" 
-    
+    sample_file = "sample.pdf"
+
     if os.path.exists(sample_file):
         process_and_store_document(sample_file)
     else:
