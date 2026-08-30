@@ -81,6 +81,35 @@ LiteLLM automatically picks the right API key from your `.env`.
 4. **Retrieve** — User question is converted to a vector; closest chunks are fetched
 5. **Generate** — Chunks + question are sent to an LLM with strict instructions to only use the provided context
 
+
+### Full Pipeline at a Glance
+```
+Your Document (PDF/TXT)
+        │
+        ▼
+  [Load]  PyPDFLoader / TextLoader
+        │
+        ▼
+  [Chunk]  RecursiveCharacterTextSplitter (500 chars, 50 overlap)
+        │
+        ▼
+  [Embed]  HuggingFace all-MiniLM-L6-v2  ──► 384-dim vectors
+        │
+        ▼
+  [Store]  ChromaDB (persisted to ./chroma_db/)
+        │
+   ─────┴───── (indexing done — run once) ─────
+        │
+   User asks a question
+        │
+        ▼
+  [Embed Question]  same HuggingFace model
+        │
+        ▼
+  [Retrieve]  cosine similarity search → top-k chunks
+        │
+        ▼
+  [Generate]  chunks + question → strict prompt → LiteLLM → LLM → Answer
 ---
 
 ## 🛠️ Tech Stack
