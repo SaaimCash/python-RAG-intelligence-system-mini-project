@@ -22,7 +22,7 @@ load_dotenv()
 #   "gemini/gemini-2.0-flash"               -> needs GEMINI_API_KEY
 #   "mistral/mistral-large-latest"          -> needs MISTRAL_API_KEY
 # ---------------------------------------------------------
-MODEL = "groq/llama3-8b-8192"
+MODEL = "groq/llama-3.1-8b-instant"
 
 
 
@@ -59,6 +59,7 @@ Answer:
 llm = ChatLiteLLM(model=MODEL, temperature=0)
 
 
+
 # DEFINES THE COMPLETE RAG EXECUTION PIPELINE
 
 def ask_rag(user_question: str):
@@ -87,9 +88,8 @@ def ask_rag(user_question: str):
     print(response.content)
 
 
-# RUNS RAG PIPELINE TESTS
-
-# RUNS RAG PIPELINE TESTS (Targeting sample.pdf content)
-ask_rag("What is the main subject of this document?")
-ask_rag("Can you summarize the core conclusions of the paper?")
-ask_rag("What is Srisawad Corporation Public Company Limited (SAWAD)")
+if __name__ == "__main__":
+    # RUNS RAG PIPELINE TESTS (Targeting sample.pdf content)
+    ask_rag("What is the main subject of this document?")
+    ask_rag("Can you summarize the core conclusions of the paper?")
+    ask_rag("What is Srisawad Corporation Public Company Limited (SAWAD)")
