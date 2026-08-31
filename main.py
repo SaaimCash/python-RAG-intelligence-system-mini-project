@@ -80,18 +80,28 @@ def ask_question(request: QueryRequest):
         matching_docs = retriever.invoke(request.question)
         context_text = "\n\n".join([doc.page_content for doc in matching_docs])
 
-        # 2. Format prompt template
+        # 2. Extract source citations (convert 0-indexed page to 1-indexed for display)
+        sources = [
+            {
+                "source": doc.metadata.get("source"),
+                "page": doc.metadata.get("page") + 1 if doc.metadata.get("page") is not None else None,
+            }
+            for doc in matching_docs
+        ]
+
+        # 3. Format prompt template
         formatted_prompt = prompt_template.format(
             context=context_text,
             question=request.question
         )
 
-        # 3. Generate answer via LLM
+        # 4. Generate answer via LLM
         response = llm.invoke(formatted_prompt)
 
         return {
             "question": request.question,
             "answer": response.content,
+            "sources": sources,
             "context_retrieved": [doc.page_content for doc in matching_docs]
         }
     except Exception as e:
