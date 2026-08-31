@@ -90,13 +90,13 @@ def ask_question(request: QueryRequest):
         ]
 
         # 3. Format prompt template
-        formatted_prompt = prompt_template.format(
+        formatted_messages = prompt_template.format_prompt(
             context=context_text,
             question=request.question
-        )
+        ).to_messages()
 
         # 4. Generate answer via LLM
-        response = llm.invoke(formatted_prompt)
+        response = llm.invoke(formatted_messages)
 
         return {
             "question": request.question,
